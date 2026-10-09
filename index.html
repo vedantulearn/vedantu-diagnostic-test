@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vedantu Diagnostic Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#241547; --ink-2:#5A4D7C; --line:#E4DBF5; --wash:#F6F2FD; --surface:#fff;
+  --p900:#2B1560; --p700:#4A2A9B; --p500:#6C3FC5; --p300:#B79CEB; --p100:#EDE5FB;
+  --o500:#FF6B00; --o600:#E85D00; --o700:#B34600; --o100:#FFEBDB;
+  --c-strong:#6C3FC5; --c-weak:#EDA100; --c-support:#D9480F; --c-skip:#B9AFD0;
+  --grad:linear-gradient(115deg,#2B1560 0%,#4A2A9B 45%,#C2410C 85%,#FF6B00 100%);
+  --radius:16px; --shadow:0 1px 2px rgba(43,21,96,.06),0 8px 24px rgba(43,21,96,.07);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--wash);color:var(--ink);font-family:'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:'Sora','Figtree',system-ui,sans-serif;line-height:1.2;margin:0;letter-spacing:-.01em}
+button{font:inherit;color:inherit;cursor:pointer}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--p500);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+.topbar{position:sticky;top:0;z-index:20;background:var(--grad);color:#fff}
+.topbar .wrap{display:flex;align-items:center;gap:16px;min-height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;white-space:nowrap}
+.brand svg{width:34px;height:34px;flex:none}
+.brand small{display:block;font-family:'Figtree',sans-serif;font-weight:500;font-size:.72rem;color:#F1E6FF}
+.tb-test{display:none;margin-left:auto;align-items:center;gap:12px}
+.tb-test.on{display:flex}
+.who{font-size:.9rem;color:#fff;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.timer{display:flex;align-items:center;gap:8px;background:#fff;color:var(--p900);border-radius:999px;padding:6px 14px 6px 10px;font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.timer svg{width:20px;height:20px}
+.timer.warn{background:#FFD9B8;color:#5C2300}
+.timer.urgent{background:#D9480F;color:#fff;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.progress{height:4px;background:rgba(43,21,96,.5)}
+.progress i{display:block;height:100%;width:0;background:#fff;transition:width .25s}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:2px solid transparent;border-radius:12px;padding:11px 20px;font-weight:700;font-size:1rem;transition:transform .1s,background .15s,border-color .15s}
+.btn svg{width:18px;height:18px}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--o500);color:var(--p900)}
+.btn-primary:hover{background:#FF8126}
+.btn-primary[disabled]{background:#E9E2F7;color:#8B80A8;cursor:not-allowed}
+.btn-purple{background:var(--p700);color:#fff}
+.btn-purple:hover{background:var(--p500)}
+.btn-ghost{background:#fff;border-color:var(--line);color:var(--p700)}
+.btn-ghost:hover{border-color:var(--p300)}
+.btn-ghost[aria-pressed="true"]{background:var(--o100);border-color:var(--o500);color:var(--o700)}
+.btn-ghost[disabled]{opacity:.45;cursor:not-allowed}
+.btn-sm{padding:7px 14px;font-size:.9rem;border-radius:10px;white-space:nowrap}
+.tb-test .btn{background:transparent;border-color:rgba(255,255,255,.7);color:#fff}
+.tb-test .btn:hover{background:rgba(255,255,255,.15)}
+
+.start{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);margin:32px auto;max-width:1040px;border-radius:24px;overflow:hidden;box-shadow:var(--shadow);background:#fff}
+.start-side{position:relative;background:var(--grad);color:#fff;padding:44px 40px;overflow:hidden}
+.start-side:before{content:"";position:absolute;right:-110px;bottom:-110px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.14)}
+.start-side:after{content:"";position:absolute;right:70px;bottom:70px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.18)}
+.start-side>*{position:relative;z-index:1}
+.start-side h1{font-size:2rem;font-weight:800;max-width:15ch}
+.start-side p{color:#fff;max-width:34ch;margin:14px 0 26px}
+.facts{list-style:none;margin:0;padding:0;display:grid;gap:12px;max-width:340px}
+.facts li{display:flex;gap:12px;align-items:flex-start;font-size:.95rem}
+.facts svg{width:20px;height:20px;flex:none;margin-top:2px}
+.start-form{padding:44px 40px}
+.start-form h2{font-size:1.35rem;margin-bottom:22px}
+.field{margin-bottom:22px}
+.field label,.field .lbl{display:block;font-weight:700;margin-bottom:8px}
+.input{width:100%;font:inherit;padding:13px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.input:focus{outline:none;border-color:var(--p500);box-shadow:0 0 0 4px var(--p100)}
+.hint{font-size:.85rem;color:var(--ink-2);margin-top:6px}
+.grades{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:10px}
+.grade{border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 6px;text-align:center}
+.grade b{display:block;font-family:'Sora',sans-serif;font-size:1.35rem;line-height:1.1}
+.grade span{font-size:.74rem;color:var(--ink-2);white-space:nowrap}
+.grade:hover{border-color:var(--p300)}
+.grade[aria-checked="true"]{border-color:var(--p500);background:var(--p100)}
+.grade[aria-checked="true"] b{color:var(--p700)}
+.skeleton{height:62px;border-radius:14px;background:linear-gradient(90deg,#F0EAFB,#F9F6FE,#F0EAFB);background-size:200% 100%;animation:sk 1.3s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.msg{border-radius:12px;padding:12px 14px;font-size:.92rem}
+.msg.err{background:#FDE9E0;color:#8A2A05}
+.msg.warn{background:#FFF1D6;color:#6B4000}
+.start-form .btn-primary{width:100%;padding:14px}
+
+.test-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:24px;margin:28px auto 48px;align-items:start}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
+.qmeta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.chip{display:inline-block;background:var(--p100);color:var(--p700);border-radius:999px;padding:3px 12px;font-size:.82rem;font-weight:700}
+.qcount{color:var(--ink-2);font-weight:600;font-size:.92rem}
+.qtext{font-weight:600;font-size:1.22rem;line-height:1.55;max-width:68ch;margin:0 0 22px;outline:none}
+.opts{border:0;margin:0;padding:0;display:grid;gap:12px}
+.opt{display:flex;gap:14px;align-items:flex-start;border:2px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;background:#fff}
+.opt:hover{border-color:var(--p300)}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt:focus-within{outline:3px solid var(--p500);outline-offset:2px}
+.letter{flex:none;width:32px;height:32px;border-radius:50%;background:var(--p100);color:var(--p700);display:grid;place-items:center;font-weight:800;font-size:.95rem}
+.otext{padding-top:3px;font-size:1.02rem}
+.opt.selected{border-color:var(--p500);background:#F5F0FE}
+.opt.selected .letter{background:var(--p500);color:#fff}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;align-items:center}
+.qactions .spacer{flex:1}
+.palette{position:sticky;top:84px}
+.palette h2{font-size:1rem;margin-bottom:14px}
+.pgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.pbtn{position:relative;aspect-ratio:1;border-radius:10px;border:2px solid var(--line);background:#fff;font-weight:700;color:var(--ink-2)}
+.pbtn.answered{background:var(--p500);border-color:var(--p500);color:#fff}
+.pbtn.current{border-color:var(--o500);box-shadow:0 0 0 3px var(--o100)}
+.pbtn.marked:after{content:"";position:absolute;top:-5px;right:-5px;width:14px;height:14px;border-radius:50%;background:var(--o500);border:2px solid #fff}
+.legend{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:6px;font-size:.84rem;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:8px}
+.sw{width:16px;height:16px;border-radius:5px;border:2px solid var(--line);flex:none}
+.sw.a{background:var(--p500);border-color:var(--p500)}
+.sw.m{background:var(--o500);border-color:var(--o500);border-radius:50%}
+.palette .btn{width:100%;margin-top:18px}
+
+.modal{position:fixed;inset:0;background:rgba(36,21,71,.55);display:grid;place-items:center;z-index:50;padding:20px}
+.dialog{background:#fff;border-radius:20px;max-width:420px;width:100%;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.dialog h2{font-size:1.25rem;margin-bottom:10px}
+.dialog p{margin:0 0 6px;color:var(--ink-2)}
+.dialog .row{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
+
+.center{min-height:60vh;display:grid;place-items:center;text-align:center;padding:40px 20px}
+.spin{width:54px;height:54px;border-radius:50%;border:6px solid var(--p100);border-top-color:var(--o500);animation:spin .9s linear infinite;margin:0 auto 18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* results */
+.hero{background:var(--grad);color:#fff;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-90px;top:-120px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.13)}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;padding-top:36px;padding-bottom:36px;align-items:end}
+.hero h1{font-size:2rem;font-weight:800;word-break:break-word}
+.hero .sub{color:#fff;margin:6px 0 18px}
+.facts2{display:flex;gap:10px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.facts2 li{background:rgba(43,21,96,.55);border-radius:10px;padding:7px 14px;font-size:.9rem}
+.facts2 b{font-weight:700;margin-right:6px}
+.score{background:#fff;color:var(--p900);border-radius:20px;padding:20px 28px;text-align:center;min-width:210px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.score .big{font-family:'Sora',sans-serif;font-weight:800;font-size:3.4rem;line-height:1;color:var(--o600)}
+.score .big small{font-size:1.5rem;color:var(--ink-2);font-weight:700}
+.score .pc{font-weight:700;margin-top:6px}
+.score .lv{color:var(--ink-2);font-size:.9rem}
+.nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:15}
+.nav .wrap{display:flex;gap:8px;padding-top:10px;padding-bottom:10px;overflow-x:auto}
+.nav button{border:0;background:transparent;border-radius:999px;padding:7px 16px;font-weight:600;color:var(--p700);white-space:nowrap}
+.nav button:hover{background:var(--p100)}
+.sect{margin:34px auto;scroll-margin-top:130px}
+.sect>h2{font-size:1.4rem;margin-bottom:6px}
+.sect>.lead{color:var(--ink-2);margin:0 0 18px;max-width:72ch}
+.banner{margin:20px auto 0}
+.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:24px}
+.tile{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px}
+.tile b{display:block;font-family:'Sora',sans-serif;font-size:1.6rem;line-height:1.1}
+.tile span{color:var(--ink-2);font-size:.86rem}
+.tile .g{font-weight:800;margin-right:4px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.chart-h{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
+.chart-h h2,.chart-h h3{font-size:1.05rem}
+.chart-h p{margin:4px 0 0;color:var(--ink-2);font-size:.86rem}
+.donut-box{display:flex;flex-direction:column;align-items:center;gap:14px}
+.donut{width:170px;height:170px}
+.donut text{font-family:'Sora',sans-serif;fill:var(--ink)}
+.dleg{list-style:none;margin:0;padding:0;display:grid;gap:6px;width:100%;font-size:.88rem}
+.dleg li{display:flex;align-items:center;gap:8px}
+.dleg .n{margin-left:auto;font-weight:700}
+.dot{width:12px;height:12px;border-radius:3px;flex:none}
+.glyph{font-weight:800;width:1em;text-align:center}
+.crow{display:grid;grid-template-columns:minmax(120px,230px) minmax(0,1fr) 84px;gap:12px;align-items:center;padding:7px 0}
+.crow .nm{font-weight:600;font-size:.92rem;line-height:1.3}
+.crow .nm small{display:block;color:var(--ink-2);font-weight:500;font-size:.78rem}
+.ctrack{height:16px;background:var(--p100);border-radius:4px;overflow:hidden;position:relative}
+.ctrack i{display:block;height:100%;border-radius:0 4px 4px 0;width:0;transition:width .7s cubic-bezier(.2,.7,.2,1)}
+.crow .val{font-size:.86rem;font-weight:700;text-align:right;white-space:nowrap}
+.bands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start;margin-top:16px}
+.band{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.band-h{padding:12px 16px;display:flex;align-items:center;gap:10px;border-top:5px solid}
+.band-h h3{font-size:1rem}
+.band-h .n{margin-left:auto;font-family:'Sora',sans-serif;font-weight:800;font-size:1.3rem}
+.band-h small{display:block;font-family:'Figtree',sans-serif;font-weight:500;font-size:.78rem;color:var(--ink-2)}
+.band ul{list-style:none;margin:0;padding:4px 16px 12px}
+.band li{padding:10px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.band li:last-child{border-bottom:0}
+.band .nm{font-weight:700}
+.band .meta{color:var(--ink-2);font-size:.82rem}
+.revisit{margin-top:4px;font-size:.82rem;color:var(--ink-2)}
+.revisit b{color:var(--ink)}
+.empty{padding:14px 0;color:var(--ink-2);font-size:.9rem}
+.b-strong .band-h{border-color:var(--c-strong)} .b-weak .band-h{border-color:var(--c-weak)} .b-support .band-h{border-color:var(--c-support)}
+.tbtn{margin-top:10px}
+table.dt{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:10px}
+table.dt th,table.dt td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.dt th{color:var(--ink-2);font-weight:600}
+.tscroll{overflow-x:auto}
+.tchart{width:100%;height:auto;display:block;overflow:visible}
+.tchart text{font-family:'Figtree',sans-serif;fill:var(--ink-2);font-size:11px}
+.tchart .gl{stroke:var(--line);stroke-width:1}
+.tchart .avg{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:5 4}
+.tchart rect.bar{cursor:pointer}
+.tchart .gly{font-weight:800;font-size:12px;fill:var(--ink)}
+.key{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 0;padding:0;list-style:none;font-size:.84rem;color:var(--ink-2)}
+.key li{display:flex;align-items:center;gap:6px}
+.notes{margin:14px 0 0;padding-left:18px;color:var(--ink);font-size:.92rem}
+.notes li{margin-bottom:4px}
+.plan{display:grid;gap:12px}
+.step{display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;border-left:5px solid var(--o500)}
+.step .when{font-family:'Sora',sans-serif;font-weight:700;color:var(--p700)}
+.step h3{font-size:1rem;margin-bottom:4px}
+.step p{margin:0;color:var(--ink-2);font-size:.93rem}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.sol{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;border-left:6px solid var(--c-skip)}
+.sol.correct{border-color:var(--c-strong)} .sol.wrong{border-color:var(--c-support)}
+.sol summary{list-style:none;cursor:pointer;padding:14px 18px;display:flex;gap:12px;align-items:flex-start}
+.sol summary::-webkit-details-marker{display:none}
+.sol .qn{font-family:'Sora',sans-serif;font-weight:800;color:var(--p700);min-width:34px}
+.sol .st{font-weight:700;font-size:.84rem;white-space:nowrap}
+.sol .qt{flex:1;font-weight:600;font-size:.96rem}
+.sol .body{padding:0 18px 18px 64px;font-size:.94rem}
+.sol .body .o{padding:6px 10px;border-radius:8px;margin:4px 0;border:1px solid var(--line)}
+.sol .body .o.ok{border-color:var(--c-strong);background:#F3EDFD;font-weight:600}
+.sol .body .o.bad{border-color:var(--c-support);background:#FDEEE6}
+.sol .tags{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.pill{border-radius:999px;padding:2px 10px;font-size:.78rem;font-weight:700;background:var(--p100);color:var(--p700)}
+.sol pre{white-space:pre-wrap;font-family:inherit;margin:6px 0 0;background:var(--wash);border-radius:10px;padding:12px}
+.dl{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+#tip{position:fixed;z-index:60;background:var(--p900);color:#fff;border-radius:8px;padding:7px 10px;font-size:.82rem;max-width:260px;pointer-events:none;opacity:0;transition:opacity .1s}
+#tip.on{opacity:1}
+
+.adm{max-width:560px;margin:40px auto}
+.adm .stat{display:flex;gap:14px;margin:16px 0}
+.adm .stat div{flex:1;background:var(--wash);border-radius:12px;padding:12px 14px}
+.adm .stat b{display:block;font-family:'Sora',sans-serif;font-size:1.5rem}
+
+@media (max-width:900px){
+  .start{grid-template-columns:1fr;margin:0 -20px;border-radius:0}
+  .start-side,.start-form{padding:28px 22px}
+  .test-grid{grid-template-columns:1fr}
+  .palette{position:static;order:-1}
+  .hero .wrap{grid-template-columns:1fr}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .grid3,.grid2,.bands{grid-template-columns:1fr}
+  .crow{grid-template-columns:1fr 70px;gap:4px 10px}
+  .crow .ctrack{grid-column:1/-1;order:3}
+  .step{grid-template-columns:1fr;gap:4px}
+  .sol .body{padding-left:18px}
+  .who{display:none}
+  .card{padding:20px}
+}
+@media print{
+  .topbar,.nav,.filters,.dl,.tbtn,.banner{display:none!important}
+  body{background:#fff}
+  .sol{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="topbar" role="banner">
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#fff"/><path d="M9 11l11 19 11-19" fill="none" stroke="#6C3FC5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="31" cy="11" r="3.5" fill="#FF6B00"/></svg>
+      <div>Vedantu<small>Diagnostic Test</small></div>
+    </div>
+    <div class="tb-test" id="tbTest">
+      <span class="who" id="who"></span>
+      <div class="timer" id="timer" role="timer" aria-live="off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span id="timerTxt">30:00</span></div>
+      <button class="btn btn-sm" id="submitTop">Submit</button>
+    </div>
+  </div>
+  <div class="progress" id="prog" hidden><i id="progBar"></i></div>
+</header>
+
+<main id="main">
+  <div class="center" id="vLoad"><div><div class="spin"></div><p id="loadTxt">Loading...</p></div></div>
+
+  <!-- error -->
+  <div class="center" id="vErr" hidden><div style="max-width:440px">
+    <h2>Something went wrong</h2><p id="errTxt" class="msg err" style="margin:14px 0"></p>
+    <button class="btn btn-primary" id="errRetry">Try again</button>
+  </div></div>
+
+  <!-- start -->
+  <div class="wrap" id="vStart" hidden>
+    <section class="start">
+      <div class="start-side">
+        <h1>Find out where you stand</h1>
+        <p>A 30 minute test that shows your strong chapters, the ones to work on, and the kind of mistakes you make.</p>
+        <ul class="facts">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>30 minutes in total for all questions</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Maths and Science MCQs from NCERT</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>A personal dashboard with charts and a study plan</li>
+        </ul>
+      </div>
+      <form class="start-form" id="startForm" novalidate>
+        <h2>Let's begin</h2>
+        <div class="field">
+          <label for="name">Child's name</label>
+          <input class="input" id="name" maxlength="60" autocomplete="off" placeholder="Type your full name">
+          <div class="hint">This name appears on the dashboard and in the saved results.</div>
+        </div>
+        <div class="field">
+          <span class="lbl" id="gl">Select your grade</span>
+          <div class="grades" id="grades" role="radiogroup" aria-labelledby="gl"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+        </div>
+        <div id="startMsg" class="msg err" hidden></div>
+        <button class="btn btn-primary" id="startBtn" type="submit" disabled>Start the test</button>
+      </form>
+    </section>
+  </div>
+
+  <!-- test -->
+  <div class="wrap" id="vTest" hidden>
+    <div class="test-grid">
+      <section class="card" aria-live="polite">
+        <div class="qmeta"><span class="chip" id="qSub"></span><span class="qcount" id="qCount"></span></div>
+        <h2 class="qtext" id="qText" tabindex="-1"></h2>
+        <fieldset class="opts" id="opts"><legend class="sr">Answer options</legend></fieldset>
+        <div class="qactions">
+          <button class="btn btn-ghost" id="prev">Previous</button>
+          <button class="btn btn-ghost" id="mark" aria-pressed="false">Mark for review</button>
+          <button class="btn btn-ghost" id="clear">Clear answer</button>
+          <span class="spacer"></span>
+          <button class="btn btn-primary" id="next">Next</button>
+        </div>
+      </section>
+      <aside class="card palette">
+        <h2>Question palette</h2>
+        <div class="pgrid" id="pgrid"></div>
+        <ul class="legend"><li><i class="sw a"></i>Answered</li><li><i class="sw"></i>Not answered</li><li><i class="sw m"></i>Marked for review</li></ul>
+        <button class="btn btn-purple" id="submitSide">Submit test</button>
+      </aside>
+    </div>
+  </div>
+
+  <!-- results -->
+  <div id="vRes" hidden></div>
+
+  <!-- admin -->
+  <div class="wrap" id="vAdmin" hidden>
+    <section class="card adm">
+      <h2>Results download</h2>
+      <p class="hint" style="margin-top:6px">Enter the admin key to download the saved data as CSV files.</p>
+      <div class="field" style="margin-top:16px"><label for="akey">Admin key</label><input class="input" id="akey" type="password" autocomplete="off"></div>
+      <button class="btn btn-purple" id="aGo">Unlock</button>
+      <div id="aMsg" class="msg err" style="margin-top:14px" hidden></div>
+      <div id="aBody" hidden>
+        <div class="stat"><div><b id="aN1">0</b>children tested</div><div><b id="aN2">0</b>question rows</div></div>
+        <div class="dl">
+          <button class="btn btn-primary" id="aDl1">Download results CSV</button>
+          <button class="btn btn-ghost" id="aDl2">Download answers CSV</button>
+        </div>
+        <p class="hint">Results has one row per child. Answers has one row per question, with time taken and type of mistake.</p>
+        <a id="aSheet" target="_blank" rel="noopener" class="hint">Open the Google Sheet</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="modal" id="confirm" hidden role="dialog" aria-modal="true" aria-labelledby="cfT">
+  <div class="dialog">
+    <h2 id="cfT">Submit the test?</h2>
+    <p id="cfBody"></p>
+    <div class="row"><button class="btn btn-ghost" id="cfNo">Keep working</button><button class="btn btn-primary" id="cfYes">Submit</button></div>
+  </div>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+/* =====================================================================
+   PASTE YOUR APPS SCRIPT WEB APP URL BELOW (it ends with /exec)
+   ===================================================================== */
+var API_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+
+var MODE = new URLSearchParams(location.search).get('admin') ? 'admin' : 'student';
+var SKEY = 'vedantu_diag_attempt_v2';
+var C = { strong:'#6C3FC5', weak:'#EDA100', support:'#D9480F', skip:'#B9AFD0' };
+var SKILL_COL = { 'Conceptual clarity':'#2A78D6', 'Calculation':'#E8590C', 'Understanding':'#1BAF7A', 'Application':'#E87BA4', 'Multi-step reasoning':'#4A3AA7', 'Knowledge / recall':'#EDA100' };
+var $ = function (id) { return document.getElementById(id); };
+var S = null;          // live test state
+var REPORT = null;     // last report
+var grades = [];
+var timerH = null;
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; }); }
+function mmss(sec) { sec = Math.max(0, Math.round(sec)); return Math.floor(sec / 60) + ':' + ('0' + (sec % 60)).slice(-2); }
+
+/* Calls the Apps Script backend. text/plain avoids a CORS pre-check that Apps Script cannot answer. */
+function run(fn) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(API_URL)) {
+    return Promise.reject(new Error('The test is not connected yet. Paste the Apps Script Web app URL (ending in /exec) into API_URL in index.html.'));
+  }
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ fn: fn, args: args })
+  })
+  .then(function (r) {
+    if (!r.ok) throw new Error('The server replied with status ' + r.status + '.');
+    return r.json();
+  })
+  .then(function (j) {
+    if (!j.ok) throw new Error(j.error);
+    return j.data;
+  }, function (e) {
+    if (e instanceof TypeError) throw new Error('Could not reach the server. Check your internet connection and that the Web app is deployed with access set to Anyone.');
+    throw e;
+  });
+}
+function msgOf(e) { return String((e && e.message) || e || 'Unknown error').replace(/^Error:\s*/, ''); }
+function store(k, v) { try { if (v === null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+function load(k) { try { var v = sessionStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function newId() { var a = 'abcdefghijklmnopqrstuvwxyz0123456789', s = 'T'; for (var i = 0; i < 14; i++) s += a[Math.floor(Math.random() * a.length)]; return s; }
+
+var VIEWS = ['vLoad', 'vErr', 'vStart', 'vTest', 'vRes', 'vAdmin'];
+function show(id, txt) {
+  VIEWS.forEach(function (v) { $(v).hidden = v !== id; });
+  if (txt) $('loadTxt').textContent = txt;
+  var inTest = id === 'vTest';
+  $('tbTest').classList.toggle('on', inTest);
+  $('prog').hidden = !inTest;
+  window.scrollTo(0, 0);
+}
+function fail(msg, retry) {
+  $('errTxt').textContent = msg;
+  $('errRetry').onclick = retry;
+  show('vErr');
+}
+
+/* ---------------- start screen ---------------- */
+var pickedGrade = '';
+function initStart() {
+  show('vLoad', 'Loading...');
+  run('getGrades').then(function (g) {
+    grades = g;
+    $('grades').innerHTML = g.map(function (x) {
+      return '<button type="button" class="grade" role="radio" aria-checked="false" data-g="' + esc(x.grade) + '"><b>' + x.num + '</b><span>' + x.count + ' questions</span></button>';
+    }).join('');
+    show('vStart');
+    var saved = load(SKEY);
+    if (saved) resume(saved);
+  }).catch(function (e) { fail(msgOf(e), initStart); });
+}
+$('grades').addEventListener('click', function (e) {
+  var b = e.target.closest('.grade'); if (!b) return;
+  pickedGrade = b.getAttribute('data-g');
+  Array.prototype.forEach.call($('grades').children, function (c) { c.setAttribute('aria-checked', c === b ? 'true' : 'false'); });
+  checkStart();
+});
+$('name').addEventListener('input', checkStart);
+function checkStart() { $('startBtn').disabled = !($('name').value.trim() && pickedGrade); }
+$('startForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var name = $('name').value.trim();
+  if (!name || !pickedGrade) return;
+  $('startMsg').hidden = true;
+  show('vLoad', 'Getting your questions ready...');
+  run('getTest', pickedGrade).then(function (t) {
+    var order = {};
+    t.questions.forEach(function (q) { order[q.id] = shuffle(['a', 'b', 'c', 'd']); });
+    S = { attemptId: newId(), name: name, grade: t.grade, minutes: t.minutes, qs: t.questions, order: order,
+          answers: {}, marks: {}, times: {}, cur: 0, startedAt: Date.now(), endsAt: Date.now() + t.minutes * 60000, qStart: Date.now() };
+    persist(); beginTest();
+  }).catch(function (err) {
+    show('vStart'); $('startMsg').textContent = msgOf(err); $('startMsg').hidden = false;
+  });
+});
+function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function persist() { if (S) store(SKEY, S); }
+function resume(saved) {
+  S = saved; S.qStart = Date.now();
+  if (S.endsAt <= Date.now()) { beginTest(); finish('time'); return; }
+  beginTest();
+}
+
+/* ---------------- test ---------------- */
+function curQ() { return S.qs[S.cur]; }
+function lap() {
+  var now = Date.now(), q = curQ();
+  if (q && S.qStart) S.times[q.id] = Math.round(((S.times[q.id] || 0) + (now - S.qStart) / 1000) * 10) / 10;
+  S.qStart = now;
+}
+function beginTest() {
+  $('who').textContent = S.name + ' | ' + S.grade;
+  show('vTest');
+  buildPalette(); renderQ(); tick();
+  clearInterval(timerH); timerH = setInterval(tick, 250);
+  window.onbeforeunload = function (e) { e.preventDefault(); e.returnValue = ''; return ''; };
+}
+function tick() {
+  if (!S) return;
+  var left = Math.max(0, Math.ceil((S.endsAt - Date.now()) / 1000));
+  $('timerTxt').textContent = mmss(left);
+  var t = $('timer'); t.classList.toggle('warn', left <= 300 && left > 60); t.classList.toggle('urgent', left <= 60);
+  if (left <= 0) { clearInterval(timerH); finish('time'); }
+}
+function buildPalette() {
+  $('pgrid').innerHTML = S.qs.map(function (q, i) { return '<button type="button" class="pbtn" data-i="' + i + '" aria-label="Question ' + (i + 1) + '">' + (i + 1) + '</button>'; }).join('');
+}
+function renderQ() {
+  var q = curQ(), n = S.qs.length;
+  $('qSub').textContent = q.subject;
+  $('qCount').textContent = 'Question ' + (S.cur + 1) + ' of ' + n;
+  $('qText').textContent = q.text;
+  var sel = S.answers[q.id];
+  $('opts').innerHTML = '<legend class="sr">Answer options</legend>' + S.order[q.id].map(function (k, pos) {
+    var L = 'ABCD'[pos];
+    return '<label class="opt' + (sel === k ? ' selected' : '') + '"><input type="radio" name="o" value="' + k + '"' + (sel === k ? ' checked' : '') + '><span class="letter">' + L + '</span><span class="otext">' + esc(q.options[k]) + '</span></label>';
+  }).join('');
+  $('prev').disabled = S.cur === 0;
+  $('next').textContent = S.cur === n - 1 ? 'Review and submit' : 'Next';
+  $('mark').setAttribute('aria-pressed', S.marks[q.id] ? 'true' : 'false');
+  $('clear').disabled = !sel;
+  Array.prototype.forEach.call($('pgrid').children, function (b, i) {
+    var id = S.qs[i].id;
+    b.className = 'pbtn' + (S.answers[id] ? ' answered' : '') + (S.marks[id] ? ' marked' : '') + (i === S.cur ? ' current' : '');
+  });
+  var answered = Object.keys(S.answers).length;
+  $('progBar').style.width = (answered / n * 100) + '%';
+}
+function go(i) { lap(); S.cur = Math.max(0, Math.min(S.qs.length - 1, i)); persist(); renderQ(); $('qText').focus({ preventScroll: true }); }
+$('opts').addEventListener('change', function (e) { if (e.target.name === 'o') { S.answers[curQ().id] = e.target.value; persist(); renderQ(); } });
+$('prev').onclick = function () { go(S.cur - 1); };
+$('next').onclick = function () { if (S.cur === S.qs.length - 1) askSubmit(); else go(S.cur + 1); };
+$('mark').onclick = function () { var id = curQ().id; if (S.marks[id]) delete S.marks[id]; else S.marks[id] = 1; persist(); renderQ(); };
+$('clear').onclick = function () { delete S.answers[curQ().id]; persist(); renderQ(); };
+$('pgrid').addEventListener('click', function (e) { var b = e.target.closest('.pbtn'); if (b) go(+b.getAttribute('data-i')); });
+document.addEventListener('keydown', function (e) {
+  if ($('vTest').hidden || !$('confirm').hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+  var k = e.key.toLowerCase(), pos = 'abcd'.indexOf(k);
+  if (pos < 0 && '1234'.indexOf(k) >= 0 && k) pos = +k - 1;
+  if (pos >= 0 && k.length === 1) { S.answers[curQ().id] = S.order[curQ().id][pos]; persist(); renderQ(); }
+  else if (e.key === 'ArrowRight') go(S.cur + 1);
+  else if (e.key === 'ArrowLeft') go(S.cur - 1);
+});
+function askSubmit() {
+  var n = S.qs.length, a = Object.keys(S.answers).length, m = Object.keys(S.marks).length;
+  var left = Math.max(0, Math.ceil((S.endsAt - Date.now()) / 1000));
+  $('cfBody').textContent = 'You answered ' + a + ' of ' + n + ' questions' + (n - a ? ' (' + (n - a) + ' left blank)' : '') + (m ? ', ' + m + ' marked for review' : '') + '. Time left: ' + mmss(left) + '.';
+  $('confirm').hidden = false; $('cfYes').focus();
+}
+$('submitTop').onclick = $('submitSide').onclick = askSubmit;
+$('cfNo').onclick = function () { $('confirm').hidden = true; };
+$('cfYes').onclick = function () { $('confirm').hidden = true; finish('manual'); };
+
+var finishing = false;
+function finish(reason) {
+  if (finishing) return;
+  finishing = true;
+  clearInterval(timerH);
+  lap();
+  window.onbeforeunload = null;
+  $('confirm').hidden = true;
+  var used = Math.min(S.minutes * 60, Math.round((Date.now() - S.startedAt) / 1000));
+  if (reason === 'time') used = S.minutes * 60;
+  var payload = { attemptId: S.attemptId, name: S.name, grade: S.grade, answers: S.answers, times: S.times, timeTakenSec: used, reason: reason };
+  persist();
+  var send = function () {
+    show('vLoad', 'Checking your answers and building your dashboard...');
+    run('submitTest', payload).then(function (rep) {
+      store(SKEY, null); S = null; finishing = false;
+      REPORT = rep; renderReport(rep);
+    }).catch(function (e) {
+      fail('We could not submit your test: ' + msgOf(e) + ' Your answers are kept on this page. Tap "Try again".', send);
+    });
+  };
+  send();
+}
+
+/* ---------------- charts ---------------- */
+function donut(segs, centerBig, centerSmall) {
+  var tot = segs.reduce(function (a, s) { return a + s.n; }, 0);
+  var r = 62, cx = 85, cy = 85, circ = 2 * Math.PI * r, off = 0, arcs = '';
+  segs.filter(function (s) { return s.n > 0; }).forEach(function (s) {
+    var len = s.n / tot * circ;
+    arcs += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + s.c + '" stroke-width="24" stroke-dasharray="' + Math.max(0, len - 2) + ' ' + (circ - Math.max(0, len - 2)) + '" stroke-dashoffset="' + (-off) + '" transform="rotate(-90 ' + cx + ' ' + cy + ')" data-tip="' + esc(s.label + ': ' + s.n) + '"/>';
+    off += len;
+  });
+  if (!tot) arcs = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#EDE5FB" stroke-width="24"/>';
+  var svg = '<svg class="donut" viewBox="0 0 170 170" role="img" aria-label="' + esc(centerBig + ' ' + centerSmall) + '">' + arcs +
+    '<text x="85" y="86" text-anchor="middle" font-size="26" font-weight="800">' + esc(centerBig) + '</text>' +
+    '<text x="85" y="104" text-anchor="middle" font-size="11" style="fill:#5A4D7C;font-family:Figtree,sans-serif">' + esc(centerSmall) + '</text></svg>';
+  var leg = '<ul class="dleg">' + segs.map(function (s) {
+    return '<li><i class="dot" style="background:' + s.c + '"></i><span class="glyph" aria-hidden="true">' + (s.g || '') + '</span>' + esc(s.label) + '<span class="n">' + s.n + '</span></li>';
+  }).join('') + '</ul>';
+  return '<div class="donut-box">' + svg + leg + '</div>';
+}
+function chapterAll(rep) {
+  var out = [];
+  [['strong', 'Strong', '✓'], ['weak', 'Weak', '!'], ['support', 'Need support', '✗']].forEach(function (b) {
+    rep.topics[b[0]].forEach(function (t) { out.push({ t: t, band: b[0], label: b[1], g: b[2] }); });
+  });
+  return out;
+}
+function barsChapters(rep) {
+  var all = chapterAll(rep).sort(function (a, b) { return a.t.percent - b.t.percent; });
+  return all.map(function (x) {
+    return '<div class="crow"><div class="nm">' + esc(x.t.topic) + '<small>' + esc(x.t.subjects.join(', ')) + '</small></div>' +
+      '<div class="ctrack" data-tip="' + esc(x.t.topic + ': ' + x.t.correct + ' of ' + x.t.total + ' correct (' + x.label + ')') + '"><i data-w="' + x.t.percent + '" style="background:' + C[x.band] + '"></i></div>' +
+      '<div class="val"><span class="glyph" aria-hidden="true">' + x.g + '</span> ' + x.t.correct + '/' + x.t.total + ' &middot; ' + x.t.percent + '%</div></div>';
+  }).join('');
+}
+function tableChapters(rep) {
+  return '<table class="dt"><tr><th>Chapter</th><th>Correct</th><th>Accuracy</th><th>Group</th></tr>' + chapterAll(rep).map(function (x) {
+    return '<tr><td>' + esc(x.t.topic) + '</td><td>' + x.t.correct + '/' + x.t.total + '</td><td>' + x.t.percent + '%</td><td>' + x.label + '</td></tr>';
+  }).join('') + '</table>';
+}
+function timeChart(rep) {
+  var qs = rep.questions, n = qs.length;
+  var maxT = Math.max.apply(null, qs.map(function (q) { return q.timeSec; }).concat([rep.summary.avgTimeSec, 30]));
+  var step = maxT > 240 ? 120 : (maxT > 120 ? 60 : 30);
+  var top = Math.ceil(maxT / step) * step;
+  var W = Math.max(560, n * 46), H = 260, L = 40, R = 10, T = 22, B = 56, pw = W - L - R, ph = H - T - B;
+  var y = function (v) { return T + ph - v / top * ph; };
+  var slot = pw / n, bw = Math.min(24, slot * 0.6);
+  var g = '', i;
+  for (i = 0; i <= top; i += step) g += '<line class="gl" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(i) + '" y2="' + y(i) + '"/><text x="' + (L - 6) + '" y="' + (y(i) + 4) + '" text-anchor="end">' + mmss(i) + '</text>';
+  var glyph = { correct: '✓', wrong: '✗', skipped: '–' }, col = { correct: C.strong, wrong: C.support, skipped: C.skip };
+  var word = { correct: 'Correct', wrong: 'Wrong', skipped: 'Skipped' };
+  qs.forEach(function (q, k) {
+    var x = L + slot * k + (slot - bw) / 2, h = Math.max(2, ph - (y(q.timeSec) - T)), yy = T + ph - h;
+    var tip = 'Q' + q.no + ' ' + q.chapter + ': ' + word[q.status] + ', ' + mmss(q.timeSec) + ' (' + q.pace + '). Mistake type: ' + q.errorTypes.join(', ');
+    g += '<path d="M' + x + ' ' + (T + ph) + 'V' + (yy + 4) + 'Q' + x + ' ' + yy + ' ' + (x + 4) + ' ' + yy + 'H' + (x + bw - 4) + 'Q' + (x + bw) + ' ' + yy + ' ' + (x + bw) + ' ' + (yy + 4) + 'V' + (T + ph) + 'Z" fill="' + col[q.status] + '" class="bar" data-tip="' + esc(tip) + '" tabindex="0" role="img" aria-label="' + esc(tip) + '"/>';
+    g += '<text class="gly" x="' + (x + bw / 2) + '" y="' + (yy - 5) + '" text-anchor="middle">' + glyph[q.status] + '</text>';
+    g += '<text x="' + (x + bw / 2) + '" y="' + (T + ph + 15) + '" text-anchor="middle">Q' + q.no + '</text>';
+    var tags = q.errorTypes;
+    tags.forEach(function (t, j) {
+      var w = bw / tags.length;
+      g += '<rect x="' + (x + j * w) + '" y="' + (T + ph + 24) + '" width="' + w + '" height="8" fill="' + (SKILL_COL[t] || '#999') + '" data-tip="' + esc('Q' + q.no + ' skill: ' + t) + '"/>';
+    });
+  });
+  if (rep.summary.avgTimeSec) g += '<line class="avg" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(rep.summary.avgTimeSec) + '" y2="' + y(rep.summary.avgTimeSec) + '"/><text x="' + (L + 4) + '" y="' + (y(rep.summary.avgTimeSec) - 5) + '" text-anchor="start" style="fill:#241547;font-weight:700">Average ' + mmss(rep.summary.avgTimeSec) + '</text>';
+  g += '<text x="' + (L - 6) + '" y="' + (T + ph + 36) + '" text-anchor="end" style="font-size:10px">skill</text>';
+  return '<div class="tscroll"><svg class="tchart" viewBox="0 0 ' + W + ' ' + H + '" style="min-width:' + Math.min(W, 560) + 'px" role="group" aria-label="Time taken per question">' + g + '</svg></div>';
+}
+function timeTable(rep) {
+  return '<div class="tscroll"><table class="dt"><tr><th>Q</th><th>Chapter</th><th>Result</th><th>Time</th><th>Pace</th><th>Type of mistake</th></tr>' + rep.questions.map(function (q) {
+    return '<tr><td>' + q.no + '</td><td>' + esc(q.chapter) + '</td><td>' + ({ correct: '✓ Correct', wrong: '✗ Wrong', skipped: '– Skipped' })[q.status] + '</td><td>' + mmss(q.timeSec) + '</td><td>' + q.pace + '</td><td>' + esc(q.errorTypes.join(', ')) + '</td></tr>';
+  }).join('') + '</table></div>';
+}
+
+/* ---------------- report ---------------- */
+function bandCard(cls, title, sub, items) {
+  return '<div class="band ' + cls + '"><div class="band-h"><div><h3>' + title + '</h3><small>' + sub + '</small></div><span class="n">' + items.length + '</span></div>' +
+    (items.length ? '<ul>' + items.map(function (t) {
+      return '<li><div class="nm">' + esc(t.topic) + '</div><div class="meta">' + t.correct + ' of ' + t.total + ' correct &middot; ' + esc(t.subjects.join(', ')) + '</div>' +
+        (t.concepts.length && t.percent < 100 ? '<div class="revisit"><b>Revisit:</b> ' + esc(t.concepts.join('; ')) + '</div>' : '') + '</li>';
+    }).join('') + '</ul>' : '<div class="empty" style="padding:14px 16px">None in this group.</div>') + '</div>';
+}
+function renderReport(rep) {
+  var s = rep.summary, v = $('vRes');
+  var ch = rep.topics;
+  var missed = rep.errorTypes.filter(function (t) { return t.missed > 0; });
+  var mSegs = missed.map(function (t) { return { label: t.type, n: t.missed, c: SKILL_COL[t.type] || '#888' }; });
+  var html = '';
+  html += '<section class="hero"><div class="wrap"><div><h1>' + esc(rep.student.name) + '</h1><p class="sub">' + esc(rep.student.grade) + ' &middot; Diagnostic report</p>' +
+    '<ul class="facts2"><li><b>Time used</b>' + mmss(s.timeTakenSec) + ' of 30:00</li><li><b>Avg per question</b>' + mmss(s.avgTimeSec) + '</li><li><b>Ended by</b>' + esc(rep.endedBy) + '</li></ul></div>' +
+    '<div class="score"><div class="big">' + s.correct + '<small>/' + s.total + '</small></div><div class="pc">' + s.percent + '%</div><div class="lv">' + esc(s.level) + '</div></div></div></section>';
+  html += '<nav class="nav" aria-label="Dashboard sections"><div class="wrap">' +
+    [['sOver', 'Overview'], ['sChap', 'Chapters'], ['sMist', 'Mistakes'], ['sTime', 'Time per question'], ['sPlan', 'Study plan'], ['sSol', 'Solutions']].map(function (x) { return '<button data-go="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div></nav>';
+  html += '<div class="wrap">';
+  if (rep.saved === false) html += '<div class="msg warn banner" role="alert">Your result could not be saved to the school sheet. Please download your CSV below and share it with your teacher.</div>';
+  html += '<div class="tiles">' +
+    '<div class="tile"><b style="color:' + C.strong + '"><span class="g">✓</span>' + s.correct + '</b><span>Correct</span></div>' +
+    '<div class="tile"><b style="color:' + C.support + '"><span class="g">✗</span>' + s.wrong + '</b><span>Wrong</span></div>' +
+    '<div class="tile"><b><span class="g">–</span>' + s.skipped + '</b><span>Skipped</span></div>' +
+    '<div class="tile"><b>' + mmss(s.timeTakenSec) + '</b><span>Time used</span></div>' +
+    '<div class="tile"><b>' + mmss(s.avgTimeSec) + '</b><span>Average per question</span></div></div>';
+
+  html += '<section class="sect" id="sOver"><h2>Overview</h2><p class="lead">How the answers split, how strong the chapters are, and which kinds of mistakes cost marks.</p><div class="grid3">' +
+    '<div class="card"><div class="chart-h"><div><h3>Answers</h3><p>Right, wrong and skipped</p></div></div>' + donut([
+      { label: 'Correct', n: s.correct, c: C.strong, g: '✓' }, { label: 'Wrong', n: s.wrong, c: C.support, g: '✗' }, { label: 'Skipped', n: s.skipped, c: C.skip, g: '–' }], s.percent + '%', 'score') + '</div>' +
+    '<div class="card"><div class="chart-h"><div><h3>Chapters by strength</h3><p>Strong 70% or more, weak 40 to 69%, need support below 40%</p></div></div>' + donut([
+      { label: 'Strong', n: ch.strong.length, c: C.strong, g: '✓' }, { label: 'Weak', n: ch.weak.length, c: C.weak, g: '!' }, { label: 'Need support', n: ch.support.length, c: C.support, g: '✗' }],
+      String(ch.strong.length + ch.weak.length + ch.support.length), 'chapters') + '</div>' +
+    '<div class="card"><div class="chart-h"><div><h3>Type of mistakes</h3><p>Skill tag of each missed question</p></div></div>' +
+      (mSegs.length ? donut(mSegs, String(missed.reduce(function (a, t) { return a + t.missed; }, 0)), 'tags') : '<p class="empty">No missed questions. Nothing to fix here.</p>') + '</div></div></section>';
+
+  html += '<section class="sect" id="sChap"><h2>Strong chapters and chapters to work on</h2><p class="lead">Each bar is the share of that chapter’s questions answered correctly. Purple is strong, amber is weak, orange needs support.</p>' +
+    '<div class="card"><div id="chView">' + barsChapters(rep) + '</div><button class="btn btn-ghost btn-sm tbtn" id="chTog" aria-pressed="false">View as table</button></div>' +
+    '<div class="bands">' + bandCard('b-strong', '✓ Strong', '70% or more', ch.strong) + bandCard('b-weak', '! Weak', '40 to 69%', ch.weak) + bandCard('b-support', '✗ Need support', 'Below 40%', ch.support) + '</div></section>';
+
+  html += '<section class="sect" id="sMist"><h2>Type of mistakes</h2><p class="lead">Based on the skill each question tests. A question tagged with two skills counts under both.</p><div class="grid2">' +
+    '<div class="card"><div class="chart-h"><div><h3>Missed questions by skill</h3><p>Wrong or skipped, out of questions testing that skill</p></div></div><div id="mView">' +
+    rep.errorTypes.map(function (t) {
+      var p = t.total ? Math.round(t.missed / t.total * 100) : 0;
+      return '<div class="crow"><div class="nm">' + esc(t.type) + '</div><div class="ctrack" data-tip="' + esc(t.type + ': ' + t.missed + ' of ' + t.total + ' missed') + '"><i data-w="' + p + '" style="background:' + (SKILL_COL[t.type] || '#888') + '"></i></div><div class="val">' + t.missed + '/' + t.total + '</div></div>';
+    }).join('') + '</div></div>' +
+    '<div class="card"><div class="chart-h"><div><h3>What each mistake means</h3></div></div><table class="dt">' + (missed.length ? missed.map(function (t) {
+      return '<tr><td><i class="dot" style="display:inline-block;background:' + (SKILL_COL[t.type] || '#888') + '"></i> <b>' + esc(t.type) + '</b></td><td>' + esc(t.desc) + '</td></tr>';
+    }).join('') : '<tr><td>No mistakes to explain.</td></tr>') + '</table></div></div></section>';
+
+  html += '<section class="sect" id="sTime"><h2>Time taken on each question</h2><p class="lead">Bar height is the time spent. Colour and symbol show the result, and the strip under each bar shows the skill tested.</p><div class="card">' +
+    '<div id="tView">' + timeChart(rep) + '</div>' +
+    '<ul class="key"><li><i class="dot" style="background:' + C.strong + '"></i>✓ Correct</li><li><i class="dot" style="background:' + C.support + '"></i>✗ Wrong</li><li><i class="dot" style="background:' + C.skip + '"></i>– Skipped</li>' +
+    Object.keys(SKILL_COL).map(function (k) { return '<li><i class="dot" style="background:' + SKILL_COL[k] + ';height:8px"></i>' + k + '</li>'; }).join('') + '</ul>' +
+    (rep.timeNotes.length ? '<ul class="notes">' + rep.timeNotes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul>' : '') +
+    '<button class="btn btn-ghost btn-sm tbtn" id="tTog" aria-pressed="false">View as table</button></div></section>';
+
+  html += '<section class="sect" id="sPlan"><h2>Short preparation plan</h2><p class="lead">Built from this child’s weak chapters and top mistake types.</p><div class="plan">' +
+    rep.plan.map(function (p) { return '<div class="step"><div class="when">' + esc(p.when) + '</div><div><h3>' + esc(p.title) + '</h3><p>' + esc(p.detail) + '</p></div></div>'; }).join('') + '</div></section>';
+
+  html += '<section class="sect" id="sSol"><h2>Questions and solutions</h2><p class="lead">Open a question to see the options, the right answer, the time taken and the detailed solution.</p>' +
+    '<div class="filters" role="group" aria-label="Filter questions">' + [['all', 'All'], ['wrong', 'Wrong'], ['skipped', 'Skipped'], ['correct', 'Correct']].map(function (f, i) {
+      return '<button class="btn btn-ghost btn-sm" data-f="' + f[0] + '" aria-pressed="' + (i === 0) + '">' + f[1] + '</button>'; }).join('') + '</div><div id="solList">' +
+    rep.questions.map(function (q) {
+      var stTxt = { correct: '✓ Correct', wrong: '✗ Wrong', skipped: '– Skipped' }[q.status];
+      var stCol = { correct: C.strong, wrong: C.support, skipped: '#5A4D7C' }[q.status];
+      return '<details class="sol ' + q.status + '" data-s="' + q.status + '"><summary><span class="qn">Q' + q.no + '</span><span class="qt">' + esc(q.text) + '</span><span class="st" style="color:' + stCol + '">' + stTxt + '<br><span style="color:#5A4D7C;font-weight:500">' + mmss(q.timeSec) + '</span></span></summary><div class="body">' +
+        ['a', 'b', 'c', 'd'].map(function (k) {
+          var c = k === q.correct ? ' ok' : (k === q.selected ? ' bad' : '');
+          return '<div class="o' + c + '">' + k.toUpperCase() + '. ' + esc(q.options[k]) + (k === q.correct ? ' (right answer)' : '') + (k === q.selected && k !== q.correct ? ' (your answer)' : '') + '</div>';
+        }).join('') +
+        '<div class="tags"><span class="pill">' + esc(q.chapter) + '</span>' + (q.concept ? '<span class="pill">' + esc(q.concept) + '</span>' : '') + q.errorTypes.map(function (t) { return '<span class="pill" style="background:' + (SKILL_COL[t] || '#888') + ';color:#fff">' + esc(t) + '</span>'; }).join('') + '<span class="pill">' + mmss(q.timeSec) + ' &middot; ' + q.pace + '</span></div>' +
+        '<b>Detailed solution</b><pre>' + esc(q.solution) + '</pre>' +
+        (q.mistakes ? '<p style="margin:10px 0 0"><b>Common mistakes:</b> ' + esc(q.mistakes) + '</p>' : '') + '</div></details>';
+    }).join('') + '</div></section>';
+
+  html += '<section class="sect"><div class="dl"><button class="btn btn-primary" id="dlMine">Download my results (CSV)</button><button class="btn btn-ghost" onclick="window.print()">Print report</button><button class="btn btn-ghost" id="again">Take another test</button></div></section></div>';
+  v.innerHTML = html;
+  show('vRes');
+  setTimeout(function () { Array.prototype.forEach.call(v.querySelectorAll('i[data-w]'), function (b) { b.style.width = b.getAttribute('data-w') + '%'; }); }, 60);
+
+  v.querySelector('.nav').onclick = function (e) { var b = e.target.closest('button'); if (b) $(b.getAttribute('data-go')).scrollIntoView({ behavior: 'smooth' }); };
+  $('chTog').onclick = function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); this.textContent = on ? 'View as chart' : 'View as table'; $('chView').innerHTML = on ? tableChapters(rep) : barsChapters(rep); if (!on) setTimeout(function () { Array.prototype.forEach.call($('chView').querySelectorAll('i[data-w]'), function (b) { b.style.width = b.getAttribute('data-w') + '%'; }); }, 30); };
+  $('tTog').onclick = function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); this.textContent = on ? 'View as chart' : 'View as table'; $('tView').innerHTML = on ? timeTable(rep) : timeChart(rep); };
+  v.querySelector('.filters').onclick = function (e) {
+    var b = e.target.closest('[data-f]'); if (!b) return;
+    Array.prototype.forEach.call(this.children, function (c) { c.setAttribute('aria-pressed', c === b); });
+    Array.prototype.forEach.call($('solList').children, function (d) { d.hidden = b.getAttribute('data-f') !== 'all' && d.getAttribute('data-s') !== b.getAttribute('data-f'); });
+  };
+  $('dlMine').onclick = function () { download(childCsv(rep), 'vedantu-diagnostic-' + slug(rep.student.name) + '.csv'); };
+  $('again').onclick = function () { REPORT = null; finishing = false; $('name').value = ''; pickedGrade = ''; Array.prototype.forEach.call($('grades').children, function (c) { c.setAttribute('aria-checked', 'false'); }); checkStart(); show('vStart'); };
+}
+
+/* ---------------- CSV ---------------- */
+function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'student'; }
+function csvCell(v) { var s = String(v == null ? '' : v); if (/^[=+\-@]/.test(s)) s = "'" + s; return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function childCsv(rep) {
+  var head = ['Student name', 'Grade', 'Question no', 'Subject', 'Chapter', 'Concept', 'Student answer', 'Correct answer', 'Result', 'Time taken (sec)', 'Pace', 'Type of mistake (skill)', 'Attempt ID', 'Submitted at'];
+  var lab = { correct: 'Correct', wrong: 'Wrong', skipped: 'Skipped' };
+  var rows = rep.questions.map(function (q) {
+    return [rep.student.name, rep.student.grade, q.no, q.subject, q.chapter, q.concept, q.selected ? q.options[q.selected] : '', q.options[q.correct], lab[q.status], q.timeSec, q.pace, q.errorTypes.join('; '), rep.attemptId, rep.submittedAt];
+  });
+  return [head].concat(rows).map(function (r) { return r.map(csvCell).join(','); }).join('\r\n');
+}
+function download(text, name) {
+  var blob = new Blob(['﻿' + text], { type: 'text/csv;charset=utf-8' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+/* ---------------- tooltip ---------------- */
+var tip = $('tip');
+function tipShow(el, x, y) {
+  var t = el.getAttribute('data-tip'); if (!t) return;
+  tip.textContent = t; tip.classList.add('on');
+  var w = tip.offsetWidth; tip.style.left = Math.max(8, Math.min(innerWidth - w - 8, x + 12)) + 'px'; tip.style.top = (y + 16) + 'px';
+}
+document.addEventListener('mousemove', function (e) { var el = e.target.closest && e.target.closest('[data-tip]'); if (el) tipShow(el, e.clientX, e.clientY); else tip.classList.remove('on'); });
+document.addEventListener('click', function (e) { var el = e.target.closest && e.target.closest('[data-tip]'); if (el) tipShow(el, e.clientX, e.clientY); else tip.classList.remove('on'); });
+document.addEventListener('focusin', function (e) { var el = e.target; if (el.getAttribute && el.getAttribute('data-tip')) { var r = el.getBoundingClientRect(); tipShow(el, r.left, r.top); } });
+document.addEventListener('focusout', function () { tip.classList.remove('on'); });
+
+/* ---------------- admin ---------------- */
+function initAdmin() {
+  show('vAdmin');
+  $('aGo').onclick = function () {
+    $('aMsg').hidden = true; $('aGo').disabled = true;
+    run('adminInfo', $('akey').value).then(function (i) {
+      $('aN1').textContent = i.attempts; $('aN2').textContent = i.answers; $('aSheet').href = i.sheetUrl; $('aBody').hidden = false;
+    }).catch(function (e) { $('aMsg').textContent = msgOf(e); $('aMsg').hidden = false; }).then(function () { $('aGo').disabled = false; });
+  };
+  [['aDl1', 'results'], ['aDl2', 'responses']].forEach(function (p) {
+    $(p[0]).onclick = function () {
+      $('aMsg').hidden = true;
+      run('adminExport', $('akey').value, p[1]).then(function (csv) { download(csv, 'vedantu-diagnostic-' + p[1] + '.csv'); })
+        .catch(function (e) { $('aMsg').textContent = msgOf(e); $('aMsg').hidden = false; });
+    };
+  });
+}
+
+if (MODE === 'admin') initAdmin(); else initStart();
+</script>
+</body>
+</html>
